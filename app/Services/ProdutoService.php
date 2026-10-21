@@ -15,6 +15,18 @@ class ProdutoService
         return Produto::create($dados);
     }
 
+    public function update(Produto $produto, array $dados)
+    {
+        $preco = $dados['preco'] ?? $produto->preco;
+        $precoCusto = $dados['preco_custo'] ?? $produto->preco_custo;
+
+        $this->verificarMargem((float) $preco, (float) $precoCusto);
+
+        $produto->update($dados);
+
+        return $produto->fresh();
+    }
+
     private function verificarMargem(float $preco, float $custo)
     {
         $valor = $custo + (0.1 * $custo);
